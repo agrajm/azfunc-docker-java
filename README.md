@@ -15,3 +15,8 @@ docker build -t agrajm/azure-functions-java:1.0 .
 ...
 docker run agrajm/azure-functions-java:1.0
 ```
+
+Once the local setup works correctly, we need to setup Function App & configure the Application Settings with connection strings for EventHub & Cosmos
+```
+./function-app-settings.sh
+```
