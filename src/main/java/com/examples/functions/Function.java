@@ -1,18 +1,28 @@
 package com.examples.functions;
 
-import java.util.*;
-import com.microsoft.azure.functions.annotation.*;
-import com.microsoft.azure.functions.*;
+import com.examples.functions.TelemetryItem.status;
+import com.microsoft.azure.functions.annotation.Cardinality;
+import com.microsoft.azure.functions.annotation.CosmosDBOutput;
+import com.microsoft.azure.functions.annotation.EventHubOutput;
+import com.microsoft.azure.functions.annotation.EventHubTrigger;
+import com.microsoft.azure.functions.annotation.FunctionName;
+import com.microsoft.azure.functions.annotation.TimerTrigger;
+import com.microsoft.azure.functions.ExecutionContext;
+import com.microsoft.azure.functions.OutputBinding;
 
-/**
- * Azure Functions with HTTP Trigger.
- */
 public class Function {
 
     @FunctionName("generateSensorData")
-    @EventHubOutput(name = "event", eventHubName = "", connection = "EventHubConnectionString")
-    public TelemetryItem generateSensorData(@TimerTrigger(name = "TimerInfo", schedule = "*/10 * * * * *") String timerInfo,
-                                            final ExecutionContext context) {
+    @EventHubOutput(
+            name = "event",
+            eventHubName = "", // blank because the value is included in the connection string
+            connection = "EventHubConnectionString")
+    public TelemetryItem generateSensorData(
+            @TimerTrigger(
+                    name = "timerInfo",
+                    schedule = "*/10 * * * * *") // every 10 seconds
+                    String timerInfo,
+            final ExecutionContext context) {
 
         context.getLogger().info("Java Timer trigger function executed at: "
                 + java.time.LocalDateTime.now());
@@ -21,15 +31,20 @@ public class Function {
         return new TelemetryItem(temperature, pressure);
     }
 
-    @FunctionName("procesSensorData")
+    @FunctionName("processSensorData")
     public void processSensorData(
-            @EventHubTrigger(name = "msg",
-                    eventHubName = "",
-                    connection = "EventHubConnectionString") TelemetryItem item,
-            @CosmosDBOutput(name = "databaseoutput",
+            @EventHubTrigger(
+                    name = "msg",
+                    eventHubName = "", // blank because the value is included in the connection string
+                    cardinality = Cardinality.ONE,
+                    connection = "EventHubConnectionString")
+                    TelemetryItem item,
+            @CosmosDBOutput(
+                    name = "databaseOutput",
                     databaseName = "TelemetryDb",
                     collectionName = "TelemetryInfo",
-                    connectionStringSetting = "CosmosDBConnectionString") OutputBinding<TelemetryItem> document,
+                    connectionStringSetting = "CosmosDBConnectionString")
+                    OutputBinding<TelemetryItem> document,
             final ExecutionContext context) {
 
         context.getLogger().info("Event hub message received: " + item.toString());
@@ -41,12 +56,13 @@ public class Function {
         }
 
         if (item.getTemperature() < 40) {
-            item.setTemperatureStatus(TelemetryItem.status.COOL);
+            item.setTemperatureStatus(status.COOL);
         } else if (item.getTemperature() > 90) {
-            item.setTemperatureStatus(TelemetryItem.status.HOT);
+            item.setTemperatureStatus(status.HOT);
         } else {
-            item.setTemperatureStatus(TelemetryItem.status.WARM);
+            item.setTemperatureStatus(status.WARM);
         }
+
         document.setValue(item);
     }
 }

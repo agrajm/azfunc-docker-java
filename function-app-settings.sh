@@ -14,7 +14,6 @@ az functionapp create \
     --storage-account $STORAGE_ACCOUNT \
     --consumption-plan-location $LOCATION \
     --runtime java
-    --tags environment=production
 
 echo "Get the storage account, cosmos & eventhub connection details"
 

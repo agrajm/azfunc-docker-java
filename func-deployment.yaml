@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azfunc-test
+  namespace: functions
+  labels:
+    app: azfunc-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: azfunc-test
+  template:
+    metadata:
+      labels:
+        app: azfunc-test
+    spec:
+      containers:
+        - name: azfunc-test
+          image: agraj/azfunc-java:1.0
+          env:
+            - name: AzureWebJobsStorage
+              valueFrom:
+                secretKeyRef:
+                  name: azfunc-secret
+                  key: AzureWebJobsStorage
+            - name: EventHubConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: azfunc-secret
+                  key: EventHubConnectionString
+            - name: CosmosDBConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: azfunc-secret
+                  key: CosmosDBConnectionString

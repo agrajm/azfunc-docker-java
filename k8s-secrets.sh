@@ -1,0 +1,1 @@
+kubectl create secret generic azfunc-secret --from-literal=AzureWebJobsStorage=$AZURE_WEB_JOBS_STORAGE --from-literal=EventHubConnectionString=$EVENT_HUB_CONNECTION_STRING --from-literal CosmosDBConnectionString=$COSMOS_DB_CONNECTION_STRING --namespace functions
