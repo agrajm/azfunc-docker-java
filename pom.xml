@@ -125,16 +125,16 @@
                     <appServicePlanName>java-functions-app-service-plan</appServicePlanName>
                     <!-- function app region-->
                     <!-- refers https://github.com/microsoft/azure-maven-plugins/tree/develop/azure-functions-maven-plugin#supported-regions for all valid values -->
-                    <region>westus</region>
+                    <region>centralus</region>
                     <!-- function pricingTier, default to be consumption if not specified -->
                     <!-- refers https://github.com/microsoft/azure-maven-plugins/tree/develop/azure-functions-maven-plugin#supported-pricing-tiers for all valid values -->
                     <pricingTier>EP1</pricingTier>
                     <runtime>
                         <!-- runtime os, could be windows, linux or docker-->
                         <os>docker</os>
-                        <image>[hub-user/]repo-name[:tag]</image>
-                        <serverId></serverId>
-                        <registryUrl></registryUrl> 
+                        <image>agraj/azfunc-java:1.0</image>
+<!--                        <serverId></serverId>-->
+<!--                        <registryUrl></registryUrl>-->
                     </runtime>
                     <appSettings>
                         <property>
